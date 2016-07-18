@@ -62,9 +62,10 @@ class MigrationCartalystSentinel extends Migration
 
         Schema::create('roles', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('slug');
             $table->string('name');
             $table->text('permissions')->nullable();
+            $table->boolean('level')->default(1)->nullable();
+        	$table->boolean('status')->default(0);
             $table->timestamps();
 
             $table->engine = 'InnoDB';
@@ -91,7 +92,7 @@ class MigrationCartalystSentinel extends Migration
             $table->index('user_id');
         });
 
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('admin_users', function (Blueprint $table) {
             $table->increments('id');
             $table->string('email');
             $table->string('password');
@@ -99,6 +100,9 @@ class MigrationCartalystSentinel extends Migration
             $table->timestamp('last_login')->nullable();
             $table->string('first_name')->nullable();
             $table->string('last_name')->nullable();
+            $table->integer('rpos_user_id')->unsigned()->nullable();
+            $table->boolean('super_user')->default(0);
+        	$table->boolean('status')->default(0);
             $table->timestamps();
 
             $table->engine = 'InnoDB';
@@ -119,6 +123,6 @@ class MigrationCartalystSentinel extends Migration
         Schema::drop('roles');
         Schema::drop('role_users');
         Schema::drop('throttle');
-        Schema::drop('users');
+        Schema::drop('admin_users');
     }
 }
