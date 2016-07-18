@@ -69,7 +69,6 @@ class MigrationCartalystSentinel extends Migration
             $table->timestamps();
 
             $table->engine = 'InnoDB';
-            $table->unique('slug');
         });
 
         Schema::create('role_users', function (Blueprint $table) {
