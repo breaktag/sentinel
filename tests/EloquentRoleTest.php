@@ -11,10 +11,10 @@
  * bundled with this package in the LICENSE file.
  *
  * @package    Sentinel
- * @version    2.0.12
+ * @version    2.0.13
  * @author     Cartalyst LLC
  * @license    BSD License (3-clause)
- * @copyright  (c) 2011-2015, Cartalyst LLC
+ * @copyright  (c) 2011-2016, Cartalyst LLC
  * @link       http://cartalyst.com
  */
 
@@ -63,6 +63,21 @@ class EloquentRoleTest extends PHPUnit_Framework_TestCase
         $this->addMockConnection($role);
 
         $this->assertInstanceOf('Illuminate\Database\Eloquent\Relations\BelongsToMany', $role->users());
+    }
+
+    public function testDeleteRole()
+    {
+        $role = m::mock('Cartalyst\Sentinel\Roles\EloquentRole[users]');
+        $role->exists = true;
+
+        $role->getConnection()->getQueryGrammar()->shouldReceive('compileDelete');
+        $role->getConnection()->shouldReceive('delete')->once();
+
+        $role->shouldReceive('users')->once()->andReturn($users = m::mock('Illuminate\Database\Eloquent\Relations\BelongsToMany'));
+
+        $users->shouldReceive('detach')->once();
+
+        $role->delete();
     }
 
     protected function addMockConnection($model)
